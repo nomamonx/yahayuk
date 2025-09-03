@@ -303,7 +303,7 @@ end
 -- Toggle: Check Admin
 local CheckAdminLoop
 SettingsTab:CreateToggle({
-    Name = "Check Admin (Notif Loop)",
+    Name = "Check Admin ",
     CurrentValue = false,
     Flag = "CheckAdminToggle",
     Callback = function(Value)
@@ -331,10 +331,9 @@ SettingsTab:CreateToggle({
 })
 
 -- Toggle: Check Summit > 100
--- Toggle: Check Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
-    Name = "Check Summit > 100 (Notif Loop)",
+    Name = "Check Pro",
     CurrentValue = false,
     Flag = "CheckSummitToggle",
     Callback = function(Value)
