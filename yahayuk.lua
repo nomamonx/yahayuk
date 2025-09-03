@@ -1,34 +1,55 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: MT Yahayyuk",
-   LoadingTitle = "Teleport System",
-   LoadingSubtitle = "By ACONG",
+    Name = "Vip Script: Mt.Yahayuk",
+    LoadingTitle = "Teleport System",
+    LoadingSubtitle = "By ACONG",
 })
--- Tab Informasi
--- ========================
-local InfoTab = Window:CreateTab("Informasi", 4483362458)
 
+-- Tab Informasi
+local InfoTab = Window:CreateTab("Informasi", 4483362458)
 Rayfield:Notify({
-   Title = "Script Dimuat",
-   Content = "TELASO berhasil muncul!!!",
-   Duration = 6.5,
-   Image = 4483362458,
+    Title = "Script Dimuat",
+    Content = "TELASO berhasil!!!",
+    Duration = 6.5,
+    Image = 4483362458,
 })
--- ========================
+
 -- Tab Teleport
--- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
+-- Tambahkan keterangan seperti "Teleport Manual"
+TeleTab:CreateParagraph({
+    Title = "Teleport Manual",
+    Content = "",
+})
+
+-- Data koordinat teleport
 local teleportPoints = {
-    Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
-    CP1 = CFrame.new(-430, 250, 789),
-    CP2 = CFrame.new(-347, 389, 522),
-    CP3 = CFrame.new(288, 430, 506),
-    CP4 = CFrame.new(334, 491, 349),
-    CP5 = CFrame.new(224, 315, -147),
-    Puncak = CFrame.new(-587, 906, -511),
+    ["Spawn"] = CFrame.new(-932, 170, 881),
+    ["CheckPoint 1"] = CFrame.new(-430, 250, 789),
+    ["CheckPoint 2"] = CFrame.new(-347, 389, 522),
+    ["CheckPoint 3"] = CFrame.new(288, 430, 506),
+    ["CheckPoint 4"] = CFrame.new(334, 491, 349),
+    ["CheckPoint 5"] = CFrame.new(224, 315, -147),
+    ["Puncak"] = CFrame.new(-587, 906, -511),
 }
+
+-- Loop semua point dan buat tombolnya
+for name, cframe in pairs(teleportPoints) do
+    TeleTab:CreateButton({
+        Name = name,
+        Callback = function()
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.CFrame = cframe
+            end
+        end
+    })
+end
+
+-- Tab Pengaturan (placeholder kosong sesuai UI)
+local PengaturanTab = Window:CreateTab("Pengaturan", 4483362458)
 
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
