@@ -8,6 +8,11 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 4483362458)
+SettingsTab:CreateParagraph({
+    Content = "INI ADALAH SC MASIH VERSI PERKEMBANGAN BOY",
+})
+
+
 
 Rayfield:Notify({
    Title = "Script Dimuat",
@@ -30,6 +35,9 @@ local teleportPoints = {
     Puncak = CFrame.new(-587, 906, -511),
 }
 
+SettingsTab:CreateParagraph({
+    Title = "Fitur Teleport Manual",
+})
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
@@ -108,8 +116,11 @@ local function isAtSpawn(pos, threshold)
     return (pos - spawnPos).Magnitude <= threshold
 end
 
+SettingsTab:CreateParagraph({
+    Title = "Fitur Teleport Otomatis",
+})
 TeleTab:CreateButton({
-    Name = "Start Auto Teleport & Respawn Loop",
+    Name = "Start Auto Teleport",
     Callback = function()
         if isAutoTeleporting then
             Rayfield:Notify({
@@ -148,7 +159,7 @@ TeleTab:CreateButton({
                 respawnCharacter()
 
                 -- Tunggu sampai karakter benar-benar berada di spawn
-                local maxWaitTime = 10
+                local maxWaitTime = 5
                 local waited = 0
                 repeat
                     task.wait(0.5)
@@ -201,7 +212,9 @@ TeleTab:CreateButton({
 -- Tab Pengaturan
 -- ========================
 local SettingsTab = Window:CreateTab("Pengaturan", 4483362458)
-
+SettingsTab:CreateParagraph({
+    Title = "Fitur Tambahan",
+})
 SettingsTab:CreateSlider({
    Name = "WalkSpeed",
    Range = {16, 200},
