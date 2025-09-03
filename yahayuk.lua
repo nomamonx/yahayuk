@@ -29,9 +29,9 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-SettingsTab:CreateParagraph({
-    Title = "Pengaturan Umum",
-    Content = "Atur kecepatan jalan, kekuatan loncat, dan fitur lain untuk memudahkan permainan.",
+
+TeleTab:CreateParagraph({
+    Title = "Teleport Manural",
 })
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
