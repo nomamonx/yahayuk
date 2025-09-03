@@ -310,14 +310,43 @@ SettingsTab:CreateToggle({
         if Value then
             CheckSummitLoop = task.spawn(function()
                 while true do
-                    local detected, playerName, summit = DetectSummitAbove100()
-                    if detected then
+                    local highestSummit = 100 -- minimal threshold
+                    local highestPlayer = nil
+
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        local character = player.Character
+                        if character then
+                            local head = character:FindFirstChild("Head")
+                            if head then
+                                for _, gui in ipairs(head:GetChildren()) do
+                                    if gui:IsA("BillboardGui") then
+                                        for _, label in ipairs(gui:GetChildren()) do
+                                            if label:IsA("TextLabel") then
+                                                local summitText = string.match(label.Text, "[Ss]ummit[^%d]*([%d,%.]+)")
+                                                if summitText then
+                                                    summitText = summitText:gsub("[,%.]", "")
+                                                    local summitNumber = tonumber(summitText)
+                                                    if summitNumber and summitNumber > highestSummit then
+                                                        highestSummit = summitNumber
+                                                        highestPlayer = player.Name
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    if highestPlayer then
                         Rayfield:Notify({
-                            Title = "Summit Tinggi!",
-                            Content = playerName .. " punya Summit: " .. summit,
+                            Title = "Summit Tertinggi Terdeteksi!",
+                            Content = highestPlayer .. " punya Summit: " .. highestSummit,
                             Duration = 5,
                         })
                     end
+
                     task.wait(5)
                 end
             end)
@@ -329,4 +358,5 @@ SettingsTab:CreateToggle({
         end
     end,
 })
+
 -- (sisa kode pengaturan dan deteksi admin tetap sama, tidak aku ulang di sini)
