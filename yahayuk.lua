@@ -10,7 +10,7 @@ local MainTab = Window:CreateTab("Informasi", 4483362458)
 
 Rayfield:Notify({
    Title = "Script Dimuat",
-   Content = "GUI berhasil muncul!",
+   Content = " Telaso berhasil muncul!",
    Duration = 6.5,
    Image = 4483362458,
 })
