@@ -8,7 +8,6 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 4483362458)
-
 })
 
 Rayfield:Notify({
@@ -32,9 +31,8 @@ local teleportPoints = {
     Puncak = CFrame.new(-587, 906, -511),
 }
 
-SettingsTab:CreateParagraph({
-    Title = "Fitur Teleport Manual",
-})
+ Title = "Fitur Teleport Manual",
+
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
@@ -113,8 +111,6 @@ local function isAtSpawn(pos, threshold)
     return (pos - spawnPos).Magnitude <= threshold
 end
 
-SettingsTab:CreateParagraph({
-    Title = "Fitur Teleport Otomatis",
 })
 TeleTab:CreateButton({
     Name = "Start Auto Teleport",
@@ -208,10 +204,7 @@ TeleTab:CreateButton({
 -- ========================
 -- Tab Pengaturan
 -- ========================
-local SettingsTab = Window:CreateTab("Pengaturan", 4483362458)
-SettingsTab:CreateParagraph({
-    Title = "Fitur Tambahan",
-})
+local SettingsTab = Window:CreateTab("Pengaturan", 4483362458
 SettingsTab:CreateSlider({
    Name = "WalkSpeed",
    Range = {16, 200},
