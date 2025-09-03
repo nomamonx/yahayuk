@@ -81,6 +81,7 @@ TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function()
 end })
 
 -- Fitur Auto Teleport CP1 sampai Puncak + Respawn + Loop
+-- Fitur Auto Teleport CP1 sampai Puncak + Respawn + Loop
 local isAutoTeleporting = false
 local autoTeleportTask = nil
 
@@ -102,6 +103,11 @@ local function respawnCharacter()
     repeat task.wait() until player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character.Humanoid.Health > 0
 end
 
+local function isAtSpawn(pos, threshold)
+    local spawnPos = teleportPoints.Spawn.Position
+    return (pos - spawnPos).Magnitude <= threshold
+end
+
 TeleTab:CreateButton({
     Name = "Start Auto Teleport & Respawn Loop",
     Callback = function()
@@ -117,20 +123,22 @@ TeleTab:CreateButton({
         autoTeleportTask = task.spawn(function()
             local player = game.Players.LocalPlayer
             while isAutoTeleporting do
-                local char = player.Character
+                -- Teleport dari CP1 sampai Puncak
                 for i, cf in ipairs(autoTeleportPoints) do
                     if not isAutoTeleporting then break end
-                    char = player.Character
+                    local char = player.Character
                     if char and char:FindFirstChild("HumanoidRootPart") then
                         char.HumanoidRootPart.CFrame = cf
                         Rayfield:Notify({
                             Title = "Auto Teleport",
                             Content = "Teleport ke CP "..i,
-                            Duration = 3,
+                            Duration = 2,
                         })
                     end
                     task.wait(2)
                 end
+
+                -- Respawn setelah sampai Puncak
                 if not isAutoTeleporting then break end
                 Rayfield:Notify({
                     Title = "Respawn",
@@ -138,7 +146,28 @@ TeleTab:CreateButton({
                     Duration = 2,
                 })
                 respawnCharacter()
-                task.wait(2) -- waktu tunggu setelah respawn biar stabil
+
+                -- Tunggu sampai karakter benar-benar berada di spawn
+                local maxWaitTime = 5
+                local waited = 0
+                repeat
+                    task.wait(0.5)
+                    waited += 0.5
+                    local char = player.Character
+                    if char and char:FindFirstChild("HumanoidRootPart") then
+                        if isAtSpawn(char.HumanoidRootPart.Position, 10) then
+                            break
+                        end
+                    end
+                until waited >= maxWaitTime
+
+                Rayfield:Notify({
+                    Title = "Loop Ulang",
+                    Content = "Mulai lagi dari CP1...",
+                    Duration = 2,
+                })
+
+                task.wait(1.5)
             end
         end)
     end,
@@ -167,6 +196,32 @@ TeleTab:CreateButton({
         end
     end,
 })
+
+
+TeleTab:CreateButton({
+    Name = "Stop Auto Teleport & Respawn",
+    Callback = function()
+        if isAutoTeleporting then
+            isAutoTeleporting = false
+            if autoTeleportTask then
+                task.cancel(autoTeleportTask)
+                autoTeleportTask = nil
+            end
+            Rayfield:Notify({
+                Title = "Auto Teleport",
+                Content = "Auto teleport dan respawn dihentikan!",
+                Duration = 3,
+            })
+        else
+            Rayfield:Notify({
+                Title = "Auto Teleport",
+                Content = "Auto teleport belum berjalan.",
+                Duration = 3,
+            })
+        end
+    end,
+})
+
 -- ========================
 -- Tab Pengaturan
 -- ========================
