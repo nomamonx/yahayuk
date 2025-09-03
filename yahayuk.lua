@@ -34,7 +34,6 @@ local teleportPoints = {
 }
 TeleTab:CreateParagraph({
     Title = "Teleport Manual",
-          Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
 })
 -- Tombol manual teleport tetap ada 
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
