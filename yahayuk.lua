@@ -18,54 +18,17 @@ Rayfield:Notify({
    Image = 4483362458,
 })
 
-
 -- ========================
 -- Tab Teleport
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
-TeleTab:CreateButton({
-   Name = "Teleport CP 1",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-62, 3, -30)
-   end,
-})
-
-TeleTab:CreateButton({
-   Name = "Teleport CP 2",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, 50, 100)
-   end,
-})
-
-TeleTab:CreateButton({
-   Name = "Teleport CP 3",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500)
-   end,
-})
-
-TeleTab:CreateButton({
-   Name = "Teleport CP 4",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500)
-   end,
-})
-
-TeleTab:CreateButton({
-   Name = "Teleport CP 5",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500)
-   end,
-})
-
-TeleTab:CreateButton({
-   Name = "Teleport Puncak",
-   Callback = function()
-       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500)
-   end,
-})
-
+TeleTab:CreateButton({ Name = "Teleport CP 1", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-62, 3, -30) end })
+TeleTab:CreateButton({ Name = "Teleport CP 2", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, 50, 100) end })
+TeleTab:CreateButton({ Name = "Teleport CP 3", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500) end })
+TeleTab:CreateButton({ Name = "Teleport CP 4", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500) end })
+TeleTab:CreateButton({ Name = "Teleport CP 5", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500) end })
+TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -10, 500) end })
 
 -- ========================
 -- Tab Pengaturan
@@ -116,7 +79,7 @@ SettingsTab:CreateToggle({
 })
 
 -- ========================
--- Tambahan Fitur Deteksi Admin & Puncak 1000an
+-- Tambahan: Toggle Deteksi Admin & Puncak 1000+
 -- ========================
 local Players = game:GetService("Players")
 
@@ -157,41 +120,61 @@ local function DetectPuncak1000()
     return false
 end
 
--- Tombol cek admin
-SettingsTab:CreateButton({
-    Name = "Check Admin",
-    Callback = function()
-        task.spawn(function()
-            while true do
-                local adminCount = DetectAdmins()
-                if adminCount > 0 then
-                    Rayfield:Notify({
-                        Title = "Admin Terdeteksi!",
-                        Content = tostring(adminCount).." Admin terdeteksi di server!",
-                        Duration = 5,
-                    })
+-- Toggle: Check Admin
+local CheckAdminLoop
+SettingsTab:CreateToggle({
+    Name = "Check Admin (Notif Loop)",
+    CurrentValue = false,
+    Flag = "CheckAdminToggle",
+    Callback = function(Value)
+        if Value then
+            CheckAdminLoop = task.spawn(function()
+                while true do
+                    local adminCount = DetectAdmins()
+                    if adminCount > 0 then
+                        Rayfield:Notify({
+                            Title = "Admin Terdeteksi!",
+                            Content = tostring(adminCount).." Admin terdeteksi di server!",
+                            Duration = 5,
+                        })
+                    end
+                    task.wait(5)
                 end
-                task.wait(5)
+            end)
+        else
+            if CheckAdminLoop then
+                task.cancel(CheckAdminLoop)
+                CheckAdminLoop = nil
             end
-        end)
+        end
     end,
 })
 
--- Tombol cek puncak 1000an
-SettingsTab:CreateButton({
-    Name = "Check Puncak 1000an",
-    Callback = function()
-        task.spawn(function()
-            while true do
-                if DetectPuncak1000() then
-                    Rayfield:Notify({
-                        Title = "Puncak Tinggi!",
-                        Content = "Ada pemain dengan puncak 1000+!",
-                        Duration = 5,
-                    })
+-- Toggle: Check Puncak 1000+
+local CheckPuncakLoop
+SettingsTab:CreateToggle({
+    Name = "Orang Pro (Notif Loop)",
+    CurrentValue = false,
+    Flag = "CheckPuncakToggle",
+    Callback = function(Value)
+        if Value then
+            CheckPuncakLoop = task.spawn(function()
+                while true do
+                    if DetectPuncak1000() then
+                        Rayfield:Notify({
+                            Title = "Puncak Tinggi!",
+                            Content = "Ada pemain dengan puncak 1000+!",
+                            Duration = 5,
+                        })
+                    end
+                    task.wait(5)
                 end
-                task.wait(5)
+            end)
+        else
+            if CheckPuncakLoop then
+                task.cancel(CheckPuncakLoop)
+                CheckPuncakLoop = nil
             end
-        end)
+        end
     end,
 })
