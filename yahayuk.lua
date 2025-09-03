@@ -22,10 +22,7 @@ Rayfield:Notify({
 -- Tab Teleport
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
-TeleTab:CreateParagraph({
-    Title = "Teleport Manual",
-          Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
-})
+
 local teleportPoints = {
     Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
     CP1 = CFrame.new(-430, 250, 789),
@@ -35,7 +32,10 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-
+TeleTab:CreateParagraph({
+    Title = "Teleport Manual",
+          Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
+})
 -- Tombol manual teleport tetap ada 
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
