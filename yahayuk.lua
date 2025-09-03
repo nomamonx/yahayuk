@@ -23,132 +23,109 @@ Rayfield:Notify({
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
--- Tombol Teleport Biasa
 local teleportPoints = {
-    ["Teleport Spawn"] = CFrame.new(-932, 170, 881),
-    ["Teleport CP 1"] = CFrame.new(-431, 250, 789),
-    ["Teleport CP 2"] = CFrame.new(-347, 389, 522),
-    ["Teleport CP 3"] = CFrame.new(288, 430, 506),
-    ["Teleport CP 4"] = CFrame.new(334, 491, 349),
-    ["Teleport CP 5"] = CFrame.new(224, 315, -147),
-    ["Teleport Puncak"] = CFrame.new(-584, 938, -520),
+    CFrame.new(-62, 3, -30),      -- CP 1
+    CFrame.new(100, 50, 100),     -- CP 2
+    CFrame.new(0, -10, 500),      -- CP 3
+    CFrame.new(0, -10, 500),      -- CP 4
+    CFrame.new(0, -10, 500),      -- CP 5
+    CFrame.new(0, -10, 500),      -- Puncak
 }
 
-for name, cf in pairs(teleportPoints) do
-    TeleTab:CreateButton({
-        Name = name,
-        Callback = function()
+-- Tombol teleport manual tetap ada semua
+TeleTab:CreateButton({ Name = "Teleport CP 1", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[1]
+    end
+end })
+
+TeleTab:CreateButton({ Name = "Teleport CP 2", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[2]
+    end
+end })
+
+TeleTab:CreateButton({ Name = "Teleport CP 3", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[3]
+    end
+end })
+
+TeleTab:CreateButton({ Name = "Teleport CP 4", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[4]
+    end
+end })
+
+TeleTab:CreateButton({ Name = "Teleport CP 5", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[5]
+    end
+end })
+
+TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function() 
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = teleportPoints[6]
+    end
+end })
+
+-- Tambahan fitur otomatis teleport dari CP 1 sampai Puncak
+local autoTeleportTask = nil
+local isAutoTeleporting = false
+
+TeleTab:CreateButton({
+    Name = "Auto Teleport CP 1 -> Puncak",
+    Callback = function()
+        if isAutoTeleporting then
+            Rayfield:Notify({
+                Title = "Auto Teleport",
+                Content = "Sudah berjalan!",
+                Duration = 3,
+            })
+            return
+        end
+        isAutoTeleporting = true
+        autoTeleportTask = task.spawn(function()
             local char = game.Players.LocalPlayer.Character
-            if char and char:FindFirstChild("HumanoidRootPart") then
-                char.HumanoidRootPart.CFrame = cf
-            end
-        end
-    })
-end
-
--- ================================
--- Loop Teleport Berurutan CP1 → Puncak
--- ================================
-local teleportSequence = {
-    CFrame.new(-431, 250, 789),  -- CP 1
-    CFrame.new(-347, 389, 522),  -- CP 2
-    CFrame.new(288, 430, 506),   -- CP 3
-    CFrame.new(334, 491, 349),   -- CP 4
-    CFrame.new(224, 315, -147),  -- CP 5
-    CFrame.new(-584, 938, -520), -- Puncak
-}
-
-local SequentialTeleportLoop = nil
-
-TeleTab:CreateToggle({
-    Name = "🔁 Loop Teleport CP1 → Puncak",
-    CurrentValue = false,
-    Flag = "SequentialTeleportLoop",
-    Callback = function(state)
-        if state then
-            SequentialTeleportLoop = task.spawn(function()
-                local player = game.Players.LocalPlayer
-                local char = player.Character
-                if not char then return end
-                local hrp = char:FindFirstChild("HumanoidRootPart")
-                if not hrp then return end
-
-                for i, cf in ipairs(teleportSequence) do
-                    if SequentialTeleportLoop == nil then
-                        -- Loop dimatikan manual, break
-                        break
-                    end
-
-                    hrp.CFrame = cf
-                    task.wait(2) -- delay 2 detik
-
-                    if i == #teleportSequence then
-                        -- Sampai Puncak, otomatis stop loop
-                        Rayfield:Notify({
-                            Title = "Loop Selesai",
-                            Content = "Teleport sudah sampai Puncak. Loop berhenti otomatis.",
-                            Duration = 5,
-                        })
-                        Rayfield.Flags["SequentialTeleportLoop"] = false
-                        SequentialTeleportLoop = nil
-                        break
-                    end
+            for i, cf in ipairs(teleportPoints) do
+                if not isAutoTeleporting then break end
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    char.HumanoidRootPart.CFrame = cf
+                    Rayfield:Notify({
+                        Title = "Auto Teleport",
+                        Content = "Teleport ke CP "..i,
+                        Duration = 2,
+                    })
                 end
-            end)
-        else
-            if SequentialTeleportLoop then
-                task.cancel(SequentialTeleportLoop)
-                SequentialTeleportLoop = nil
+                task.wait(2) -- delay 2 detik antar teleport
             end
-        end
-    end,
-})
-
--- ================================
--- Loop Teleport ke Puncak (sebelumnya)
--- ================================
-local TeleportLoopTask = nil
-local PUNCAK_CFRAME = CFrame.new(-584, 938, -520)
-
-TeleTab:CreateToggle({
-    Name = "🔁 Loop Teleport ke Puncak",
-    CurrentValue = false,
-    Flag = "LoopTeleportPuncak",
-    Callback = function(state)
-        if state then
-            TeleportLoopTask = task.spawn(function()
-                while true do
-                    local char = game.Players.LocalPlayer.Character
-                    if char and char:FindFirstChild("HumanoidRootPart") then
-                        char.HumanoidRootPart.CFrame = PUNCAK_CFRAME
-                    end
-                    task.wait(5)
-                end
-            end)
-        else
-            if TeleportLoopTask then
-                task.cancel(TeleportLoopTask)
-                TeleportLoopTask = nil
-            end
-        end
+            isAutoTeleporting = false
+        end)
     end,
 })
 
 TeleTab:CreateButton({
-    Name = "🛑 Stop Loop Teleport",
+    Name = "Stop Auto Teleport",
     Callback = function()
-        if TeleportLoopTask then
-            task.cancel(TeleportLoopTask)
-            TeleportLoopTask = nil
+        if isAutoTeleporting and autoTeleportTask then
+            isAutoTeleporting = false
+            task.cancel(autoTeleportTask)
+            autoTeleportTask = nil
             Rayfield:Notify({
-                Title = "Loop Teleport Dihentikan",
-                Content = "Teleport otomatis ke puncak telah dimatikan.",
-                Duration = 5,
+                Title = "Auto Teleport",
+                Content = "Auto teleport dihentikan!",
+                Duration = 3,
             })
         else
             Rayfield:Notify({
-                Title = "Tidak Aktif",
-                Content = "Loop teleport belum aktif atau sudah dihentikan.",
+                Title = "Auto Teleport",
+                Content = "Auto teleport belum berjalan.",
                 Duration = 3,
             })
         end
@@ -184,7 +161,6 @@ SettingsTab:CreateSlider({
    end,
 })
 
-local InfJumpConnection
 SettingsTab:CreateToggle({
    Name = "Infinite Jump",
    CurrentValue = false,
@@ -193,10 +169,7 @@ SettingsTab:CreateToggle({
        local UserInputService = game:GetService("UserInputService")
        if Value then
            InfJumpConnection = UserInputService.JumpRequest:Connect(function()
-               local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-               if humanoid then
-                   humanoid:ChangeState("Jumping")
-               end
+               game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
            end)
        else
            if InfJumpConnection then
@@ -208,21 +181,25 @@ SettingsTab:CreateToggle({
 })
 
 -- ========================
--- Deteksi Admin dan Summit
+-- Tambahan: Deteksi Admin dan Summit > 100
 -- ========================
 local Players = game:GetService("Players")
 
+-- Fungsi deteksi admin dari BillboardGui
 local function DetectAdmins()
     local adminCount = 0
     for _, player in ipairs(Players:GetPlayers()) do
-        local head = player.Character and player.Character:FindFirstChild("Head")
-        if head then
-            for _, gui in ipairs(head:GetChildren()) do
-                if gui:IsA("BillboardGui") then
-                    for _, label in ipairs(gui:GetChildren()) do
-                        if label:IsA("TextLabel") and string.find(string.upper(label.Text), "ADMIN") then
-                            adminCount += 1
-                            break
+        local character = player.Character
+        if character then
+            local head = character:FindFirstChild("Head")
+            if head then
+                for _, gui in ipairs(head:GetChildren()) do
+                    if gui:IsA("BillboardGui") then
+                        for _, label in ipairs(gui:GetChildren()) do
+                            if label:IsA("TextLabel") and string.find(string.upper(label.Text), "ADMIN") then
+                                adminCount += 1
+                                break
+                            end
                         end
                     end
                 end
@@ -232,17 +209,21 @@ local function DetectAdmins()
     return adminCount
 end
 
+-- Fungsi deteksi Summit > 100
 local function DetectSummitAbove100()
     for _, player in ipairs(Players:GetPlayers()) do
-        local head = player.Character and player.Character:FindFirstChild("Head")
-        if head then
-            for _, gui in ipairs(head:GetChildren()) do
-                if gui:IsA("BillboardGui") then
-                    for _, label in ipairs(gui:GetChildren()) do
-                        if label:IsA("TextLabel") then
-                            local summitText = string.match(label.Text, "Summit:%s*(%d+)")
-                            if summitText and tonumber(summitText) > 100 then
-                                return true, player.Name, tonumber(summitText)
+        local character = player.Character
+        if character then
+            local head = character:FindFirstChild("Head")
+            if head then
+                for _, gui in ipairs(head:GetChildren()) do
+                    if gui:IsA("BillboardGui") then
+                        for _, label in ipairs(gui:GetChildren()) do
+                            if label:IsA("TextLabel") then
+                                local summitText = string.match(label.Text, "Summit:%s*(%d+)")
+                                if summitText and tonumber(summitText) > 100 then
+                                    return true, player.Name, tonumber(summitText)
+                                end
                             end
                         end
                     end
@@ -253,7 +234,7 @@ local function DetectSummitAbove100()
     return false
 end
 
--- Loop Notifikasi Admin
+-- Toggle: Check Admin
 local CheckAdminLoop
 SettingsTab:CreateToggle({
     Name = "Check Admin (Notif Loop)",
@@ -283,7 +264,7 @@ SettingsTab:CreateToggle({
     end,
 })
 
--- Loop Notifikasi Summit > 100
+-- Toggle: Check Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
     Name = "Check Summit > 100 (Notif Loop)",
