@@ -8,11 +8,11 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 4483362458)
-SettingsTab:CreateParagraph({
-    Content = "INI ADALAH SC MASIH VERSI PERKEMBANGAN BOY",
+
 })
 
-
+SettingsTab:CreateParagraph({
+    Content = "INI ADALAH SC MASIH VERSI PERKEMBANGAN BOY",
 
 Rayfield:Notify({
    Title = "Script Dimuat",
