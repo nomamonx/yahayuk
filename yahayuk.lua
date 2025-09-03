@@ -310,10 +310,11 @@ local function DetectSummitAbove100()
                     if gui:IsA("BillboardGui") then
                         for _, label in ipairs(gui:GetChildren()) do
                             if label:IsA("TextLabel") then
-                                -- Ambil angka summit, bersihkan koma (jika ada)
-                                local summitText = string.match(label.Text, "Summit:%s*([%d,]+)")
+                                -- Cari teks "Summit" di manapun dan ambil angka setelahnya
+                                local summitText = string.match(label.Text, "[Ss]ummit[^%d]*([%d,%.]+)")
                                 if summitText then
-                                    summitText = string.gsub(summitText, ",", "") -- hilangkan koma
+                                    -- Bersihkan koma/titik dari angka
+                                    summitText = summitText:gsub("[,%.]", "")
                                     local summitNumber = tonumber(summitText)
                                     if summitNumber and summitNumber > 100 then
                                         return true, player.Name, summitNumber
