@@ -108,7 +108,7 @@ local function isAtSpawn(pos, threshold)
 end
 
 TeleTab:CreateButton({
-    Name = "Start Auto Teleport & Respawn Loop",
+    Name = "Start Auto Teleport",
     Callback = function()
         if isAutoTeleporting then
             Rayfield:Notify({
@@ -173,7 +173,7 @@ TeleTab:CreateButton({
 })
 
 TeleTab:CreateButton({
-    Name = "Stop Auto Teleport & Respawn",
+    Name = "Stop Auto Teleport ",
     Callback = function()
         if isAutoTeleporting then
             isAutoTeleporting = false
@@ -197,29 +197,6 @@ TeleTab:CreateButton({
 })
 
 
-TeleTab:CreateButton({
-    Name = "Stop Auto Teleport & Respawn",
-    Callback = function()
-        if isAutoTeleporting then
-            isAutoTeleporting = false
-            if autoTeleportTask then
-                task.cancel(autoTeleportTask)
-                autoTeleportTask = nil
-            end
-            Rayfield:Notify({
-                Title = "Auto Teleport",
-                Content = "Auto teleport dan respawn dihentikan!",
-                Duration = 3,
-            })
-        else
-            Rayfield:Notify({
-                Title = "Auto Teleport",
-                Content = "Auto teleport belum berjalan.",
-                Duration = 3,
-            })
-        end
-    end,
-})
 
 -- ========================
 -- Tab Pengaturan
@@ -353,4 +330,64 @@ SettingsTab:CreateToggle({
     end,
 })
 
+-- Toggle: Check Summit > 100
+-- Toggle: Check Summit > 100
+local CheckSummitLoop
+SettingsTab:CreateToggle({
+    Name = "Check Summit > 100 (Notif Loop)",
+    CurrentValue = false,
+    Flag = "CheckSummitToggle",
+    Callback = function(Value)
+        if Value then
+            CheckSummitLoop = task.spawn(function()
+                while true do
+                    local highestSummit = 100 -- minimal threshold
+                    local highestPlayer = nil
 
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        local character = player.Character
+                        if character then
+                            local head = character:FindFirstChild("Head")
+                            if head then
+                                for _, gui in ipairs(head:GetChildren()) do
+                                    if gui:IsA("BillboardGui") then
+                                        for _, label in ipairs(gui:GetChildren()) do
+                                            if label:IsA("TextLabel") then
+                                                local summitText = string.match(label.Text, "[Ss]ummit[^%d]*([%d,%.]+)")
+                                                if summitText then
+                                                    summitText = summitText:gsub("[,%.]", "")
+                                                    local summitNumber = tonumber(summitText)
+                                                    if summitNumber and summitNumber > highestSummit then
+                                                        highestSummit = summitNumber
+                                                        highestPlayer = player.Name
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    if highestPlayer then
+                        Rayfield:Notify({
+                            Title = "Summit Tertinggi Terdeteksi!",
+                            Content = highestPlayer .. " punya Summit: " .. highestSummit,
+                            Duration = 5,
+                        })
+                    end
+
+                    task.wait(5)
+                end
+            end)
+        else
+            if CheckSummitLoop then
+                task.cancel(CheckSummitLoop)
+                CheckSummitLoop = nil
+            end
+        end
+    end,
+})
+
+-- (sisa kode pengaturan dan deteksi admin tetap sama, tidak aku ulang di sini)
