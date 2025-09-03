@@ -126,7 +126,7 @@ TeleTab:CreateButton({
                         Rayfield:Notify({
                             Title = "Auto Teleport",
                             Content = "Teleport ke CP "..i,
-                            Duration = 2,
+                            Duration = 3,
                         })
                     end
                     task.wait(2)
@@ -300,33 +300,34 @@ SettingsTab:CreateToggle({
 })
 
 -- Toggle: Check Summit > 100
-local CheckSummitLoop
-SettingsTab:CreateToggle({
-    Name = "Check Summit > 100 (Notif Loop)",
-    CurrentValue = false,
-    Flag = "CheckSummitToggle",
-    Callback = function(Value)
-        if Value then
-            CheckSummitLoop = task.spawn(function()
-                while true do
-                    local detected, playerName, summit = DetectSummitAbove100()
-                    if detected then
-                        Rayfield:Notify({
-                            Title = "Summit Tinggi!",
-                            Content = playerName .. " punya Summit: " .. summit,
-                            Duration = 5,
-                        })
+local function DetectSummitAbove100()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local head = character:FindFirstChild("Head")
+            if head then
+                for _, gui in ipairs(head:GetChildren()) do
+                    if gui:IsA("BillboardGui") then
+                        for _, label in ipairs(gui:GetChildren()) do
+                            if label:IsA("TextLabel") then
+                                -- Ambil angka summit, bersihkan koma (jika ada)
+                                local summitText = string.match(label.Text, "Summit:%s*([%d,]+)")
+                                if summitText then
+                                    summitText = string.gsub(summitText, ",", "") -- hilangkan koma
+                                    local summitNumber = tonumber(summitText)
+                                    if summitNumber and summitNumber > 100 then
+                                        return true, player.Name, summitNumber
+                                    end
+                                end
+                            end
+                        end
                     end
-                    task.wait(5)
                 end
-            end)
-        else
-            if CheckSummitLoop then
-                task.cancel(CheckSummitLoop)
-                CheckSummitLoop = nil
             end
         end
-    end,
-})
+    end
+    return false
+end
+
 
 -- (sisa kode pengaturan dan deteksi admin tetap sama, tidak aku ulang di sini)
