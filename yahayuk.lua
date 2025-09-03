@@ -113,7 +113,7 @@ local function DetectPuncak1000()
     if not leaderboard then return false end
     for _, stat in ipairs(leaderboard:GetChildren()) do
         local puncak = stat:FindFirstChild("Puncak")
-        if puncak and tonumber(puncak.Value) >= 1000 then
+        if puncak and tonumber(puncak.Value) >= 100 then
             return true
         end
     end
