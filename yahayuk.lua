@@ -300,6 +300,7 @@ SettingsTab:CreateToggle({
 })
 
 -- Toggle: Check Summit > 100
+-- Toggle: Check Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
     Name = "Check Summit > 100 (Notif Loop)",
@@ -313,7 +314,7 @@ SettingsTab:CreateToggle({
                     if detected then
                         Rayfield:Notify({
                             Title = "Summit Tinggi!",
-                            Content = playerName .. " punya Summit: " .. tostring(summit),
+                            Content = playerName .. " punya Summit: " .. summit,
                             Duration = 5,
                         })
                     end
@@ -328,5 +329,4 @@ SettingsTab:CreateToggle({
         end
     end,
 })
-
 -- (sisa kode pengaturan dan deteksi admin tetap sama, tidak aku ulang di sini)
