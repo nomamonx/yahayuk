@@ -46,7 +46,67 @@ for name, cf in pairs(teleportPoints) do
     })
 end
 
--- ✅ Loop Teleport ke Puncak
+-- ================================
+-- Loop Teleport Berurutan CP1 → Puncak
+-- ================================
+local teleportSequence = {
+    CFrame.new(-431, 250, 789),  -- CP 1
+    CFrame.new(-347, 389, 522),  -- CP 2
+    CFrame.new(288, 430, 506),   -- CP 3
+    CFrame.new(334, 491, 349),   -- CP 4
+    CFrame.new(224, 315, -147),  -- CP 5
+    CFrame.new(-584, 938, -520), -- Puncak
+}
+
+local SequentialTeleportLoop = nil
+
+TeleTab:CreateToggle({
+    Name = "🔁 Loop Teleport CP1 → Puncak",
+    CurrentValue = false,
+    Flag = "SequentialTeleportLoop",
+    Callback = function(state)
+        if state then
+            SequentialTeleportLoop = task.spawn(function()
+                local player = game.Players.LocalPlayer
+                local char = player.Character
+                if not char then return end
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if not hrp then return end
+
+                for i, cf in ipairs(teleportSequence) do
+                    if SequentialTeleportLoop == nil then
+                        -- Loop dimatikan manual, break
+                        break
+                    end
+
+                    hrp.CFrame = cf
+                    task.wait(2) -- delay 2 detik
+
+                    if i == #teleportSequence then
+                        -- Sampai Puncak, otomatis stop loop
+                        Rayfield:Notify({
+                            Title = "Loop Selesai",
+                            Content = "Teleport sudah sampai Puncak. Loop berhenti otomatis.",
+                            Duration = 5,
+                        })
+                        Rayfield.Flags["SequentialTeleportLoop"] = false
+                        SequentialTeleportLoop = nil
+                        break
+                    end
+                end
+            end)
+        else
+            if SequentialTeleportLoop then
+                task.cancel(SequentialTeleportLoop)
+                SequentialTeleportLoop = nil
+            end
+        end
+    end,
+})
+
+-- ================================
+-- Loop Teleport ke Puncak (sebelumnya)
+-- ================================
 local TeleportLoopTask = nil
 local PUNCAK_CFRAME = CFrame.new(-584, 938, -520)
 
