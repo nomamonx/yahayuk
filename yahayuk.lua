@@ -1,9 +1,9 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: Mt.Yahayuk",
+   Name = "Vip Script: GACOOORRRyuk",
    LoadingTitle = "Teleport System",
-   LoadingSubtitle = "By Mt.Yahayuk",
+   LoadingSubtitle = "By ACONGuk",
 })
 
 local MainTab = Window:CreateTab("Informasi", 4483362458)
