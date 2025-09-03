@@ -30,9 +30,7 @@ local teleportPoints = {
     Puncak = CFrame.new(-587, 906, -511),
 }
 
-TeleTab:CreateParagraph({
-    Title = "Teleport Manural",
-})
+
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
