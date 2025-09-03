@@ -300,35 +300,33 @@ SettingsTab:CreateToggle({
 })
 
 -- Toggle: Check Summit > 100
-local function DetectSummitAbove100()
-    for _, player in ipairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local head = character:FindFirstChild("Head")
-            if head then
-                for _, gui in ipairs(head:GetChildren()) do
-                    if gui:IsA("BillboardGui") then
-                        for _, label in ipairs(gui:GetChildren()) do
-                            if label:IsA("TextLabel") then
-                                -- Cari teks "Summit" di manapun dan ambil angka setelahnya
-                                local summitText = string.match(label.Text, "[Ss]ummit[^%d]*([%d,%.]+)")
-                                if summitText then
-                                    -- Bersihkan koma/titik dari angka
-                                    summitText = summitText:gsub("[,%.]", "")
-                                    local summitNumber = tonumber(summitText)
-                                    if summitNumber and summitNumber > 100 then
-                                        return true, player.Name, summitNumber
-                                    end
-                                end
-                            end
-                        end
+local CheckSummitLoop
+SettingsTab:CreateToggle({
+    Name = "Check Summit > 100 (Notif Loop)",
+    CurrentValue = false,
+    Flag = "CheckSummitToggle",
+    Callback = function(Value)
+        if Value then
+            CheckSummitLoop = task.spawn(function()
+                while true do
+                    local detected, playerName, summit = DetectSummitAbove100()
+                    if detected then
+                        Rayfield:Notify({
+                            Title = "Summit Tinggi!",
+                            Content = playerName .. " punya Summit: " .. tostring(summit),
+                            Duration = 5,
+                        })
                     end
+                    task.wait(5)
                 end
+            end)
+        else
+            if CheckSummitLoop then
+                task.cancel(CheckSummitLoop)
+                CheckSummitLoop = nil
             end
         end
-    end
-    return false
-end
-
+    end,
+})
 
 -- (sisa kode pengaturan dan deteksi admin tetap sama, tidak aku ulang di sini)
