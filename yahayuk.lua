@@ -81,7 +81,6 @@ TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function()
 end })
 
 -- Fitur Auto Teleport CP1 sampai Puncak + Respawn + Loop
--- Fitur Auto Teleport CP1 sampai Puncak + Respawn + Loop
 local isAutoTeleporting = false
 local autoTeleportTask = nil
 
@@ -148,7 +147,7 @@ TeleTab:CreateButton({
                 respawnCharacter()
 
                 -- Tunggu sampai karakter benar-benar berada di spawn
-                local maxWaitTime = 5
+                local maxWaitTime = 6
                 local waited = 0
                 repeat
                     task.wait(0.5)
