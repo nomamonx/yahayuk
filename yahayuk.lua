@@ -22,6 +22,7 @@ Rayfield:Notify({
 -- Tab Teleport
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
+
 TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-932, 170, 881) end })
 TeleTab:CreateButton({ Name = "Teleport CP 1", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-431, 250, 789) end })
 TeleTab:CreateButton({ Name = "Teleport CP 2", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-347, 389, 522) end })
@@ -30,6 +31,50 @@ TeleTab:CreateButton({ Name = "Teleport CP 4", Callback = function() game.Player
 TeleTab:CreateButton({ Name = "Teleport CP 5", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(224, 315, -147) end })
 TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-584, 938, -520) end })
 
+-- 🌀 Toggle: Loop Teleport Puncak
+local TeleportLoop
+TeleTab:CreateToggle({
+    Name = "Loop Teleport ke Puncak",
+    CurrentValue = false,
+    Flag = "LoopTeleportPuncak",
+    Callback = function(Value)
+        if Value then
+            TeleportLoop = task.spawn(function()
+                while true do
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-584, 938, -520)
+                    task.wait(5) -- jeda 5 detik
+                end
+            end)
+        else
+            if TeleportLoop then
+                task.cancel(TeleportLoop)
+                TeleportLoop = nil
+            end
+        end
+    end,
+})
+
+-- 🛑 Tombol: Stop Loop Teleport
+TeleTab:CreateButton({
+    Name = "Stop Loop Teleport",
+    Callback = function()
+        if TeleportLoop then
+            task.cancel(TeleportLoop)
+            TeleportLoop = nil
+            Rayfield:Notify({
+                Title = "Loop Teleport Dihentikan",
+                Content = "Teleport otomatis ke puncak telah dimatikan.",
+                Duration = 5,
+            })
+        else
+            Rayfield:Notify({
+                Title = "Tidak Aktif",
+                Content = "Loop teleport belum aktif atau sudah dihentikan.",
+                Duration = 3,
+            })
+        end
+    end,
+})
 -- ========================
 -- Tab Pengaturan
 -- ========================
