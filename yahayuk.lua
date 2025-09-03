@@ -79,11 +79,11 @@ SettingsTab:CreateToggle({
 })
 
 -- ========================
--- Tambahan: Toggle Deteksi Admin & Puncak 1000+
+-- Tambahan: Deteksi Admin dan Summit > 100
 -- ========================
 local Players = game:GetService("Players")
 
--- Fungsi deteksi admin
+-- Fungsi deteksi admin dari BillboardGui
 local function DetectAdmins()
     local adminCount = 0
     for _, player in ipairs(Players:GetPlayers()) do
@@ -107,14 +107,26 @@ local function DetectAdmins()
     return adminCount
 end
 
--- Fungsi deteksi puncak >= 1000
-local function DetectPuncak1000()
-    local leaderboard = workspace:FindFirstChild("Leaderboard")
-    if not leaderboard then return false end
-    for _, stat in ipairs(leaderboard:GetChildren()) do
-        local puncak = stat:FindFirstChild("Puncak")
-        if puncak and tonumber(puncak.Value) >= 100 then
-            return true
+-- Fungsi deteksi Summit > 100
+local function DetectSummitAbove100()
+    for _, player in ipairs(Players:GetPlayers()) do
+        local character = player.Character
+        if character then
+            local head = character:FindFirstChild("Head")
+            if head then
+                for _, gui in ipairs(head:GetChildren()) do
+                    if gui:IsA("BillboardGui") then
+                        for _, label in ipairs(gui:GetChildren()) do
+                            if label:IsA("TextLabel") then
+                                local summitText = string.match(label.Text, "Summit:%s*(%d+)")
+                                if summitText and tonumber(summitText) > 100 then
+                                    return true, player.Name, tonumber(summitText)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
     return false
@@ -150,20 +162,21 @@ SettingsTab:CreateToggle({
     end,
 })
 
--- Toggle: Check Puncak 1000+
-local CheckPuncakLoop
+-- Toggle: Check Summit > 100
+local CheckSummitLoop
 SettingsTab:CreateToggle({
-    Name = "Orang Pro (Notif Loop)",
+    Name = "Check Summit > 100 (Notif Loop)",
     CurrentValue = false,
-    Flag = "CheckPuncakToggle",
+    Flag = "CheckSummitToggle",
     Callback = function(Value)
         if Value then
-            CheckPuncakLoop = task.spawn(function()
+            CheckSummitLoop = task.spawn(function()
                 while true do
-                    if DetectPuncak1000() then
+                    local detected, playerName, summit = DetectSummitAbove100()
+                    if detected then
                         Rayfield:Notify({
-                            Title = "Puncak Tinggi!",
-                            Content = "Ada pemain dengan puncak 1000+!",
+                            Title = "Summit Tinggi!",
+                            Content = playerName .. " punya Summit: " .. summit,
                             Duration = 5,
                         })
                     end
@@ -171,9 +184,9 @@ SettingsTab:CreateToggle({
                 end
             end)
         else
-            if CheckPuncakLoop then
-                task.cancel(CheckPuncakLoop)
-                CheckPuncakLoop = nil
+            if CheckSummitLoop then
+                task.cancel(CheckSummitLoop)
+                CheckSummitLoop = nil
             end
         end
     end,
