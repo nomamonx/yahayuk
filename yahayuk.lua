@@ -20,6 +20,10 @@ Rayfield:Notify({
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
+SettingsTab:CreateParagraph({
+    Title = "Teleport Manual",
+})
+
 local teleportPoints = {
     Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
     CP1 = CFrame.new(-430, 250, 789),
