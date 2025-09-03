@@ -18,7 +18,7 @@ local teleportPoints = {
     CP3 = CFrame.new(288, 430, 506),
     CP4 = CFrame.new(334, 491, 349),
     CP5 = CFrame.new(224, 315, -147),
-    Puncak = CFrame.new(-577, 932, -520),
+    Puncak = CFrame.new(-587, 906, -511),
 }
 
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
@@ -126,7 +126,7 @@ TeleTab:CreateButton({
                 Rayfield:Notify({
                     Title = "Respawn",
                     Content = "Respawn karakter...",
-                    Duration = 3,
+                    Duration = 2,
                 })
                 respawnCharacter()
                 task.wait(2) -- waktu tunggu setelah respawn biar stabil
