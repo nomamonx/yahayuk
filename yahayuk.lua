@@ -23,44 +23,63 @@ Rayfield:Notify({
 -- ========================
 local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
-TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-932, 170, 881) end })
-TeleTab:CreateButton({ Name = "Teleport CP 1", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-431, 250, 789) end })
-TeleTab:CreateButton({ Name = "Teleport CP 2", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-347, 389, 522) end })
-TeleTab:CreateButton({ Name = "Teleport CP 3", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(288, 430, 506) end })
-TeleTab:CreateButton({ Name = "Teleport CP 4", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(334, 491, 349) end })
-TeleTab:CreateButton({ Name = "Teleport CP 5", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(224, 315, -147) end })
-TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-584, 938, -520) end })
+-- Tombol Teleport Biasa
+local teleportPoints = {
+    ["Teleport Spawn"] = CFrame.new(-932, 170, 881),
+    ["Teleport CP 1"] = CFrame.new(-431, 250, 789),
+    ["Teleport CP 2"] = CFrame.new(-347, 389, 522),
+    ["Teleport CP 3"] = CFrame.new(288, 430, 506),
+    ["Teleport CP 4"] = CFrame.new(334, 491, 349),
+    ["Teleport CP 5"] = CFrame.new(224, 315, -147),
+    ["Teleport Puncak"] = CFrame.new(-584, 938, -520),
+}
 
--- 🌀 Toggle: Loop Teleport Puncak
-local TeleportLoop
+for name, cf in pairs(teleportPoints) do
+    TeleTab:CreateButton({
+        Name = name,
+        Callback = function()
+            local char = game.Players.LocalPlayer.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                char.HumanoidRootPart.CFrame = cf
+            end
+        end
+    })
+end
+
+-- ✅ Loop Teleport ke Puncak
+local TeleportLoopTask = nil
+local PUNCAK_CFRAME = CFrame.new(-584, 938, -520)
+
 TeleTab:CreateToggle({
-    Name = "Loop Teleport ke Puncak",
+    Name = "🔁 Loop Teleport ke Puncak",
     CurrentValue = false,
     Flag = "LoopTeleportPuncak",
-    Callback = function(Value)
-        if Value then
-            TeleportLoop = task.spawn(function()
+    Callback = function(state)
+        if state then
+            TeleportLoopTask = task.spawn(function()
                 while true do
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-584, 938, -520)
-                    task.wait(5) -- jeda 5 detik
+                    local char = game.Players.LocalPlayer.Character
+                    if char and char:FindFirstChild("HumanoidRootPart") then
+                        char.HumanoidRootPart.CFrame = PUNCAK_CFRAME
+                    end
+                    task.wait(5)
                 end
             end)
         else
-            if TeleportLoop then
-                task.cancel(TeleportLoop)
-                TeleportLoop = nil
+            if TeleportLoopTask then
+                task.cancel(TeleportLoopTask)
+                TeleportLoopTask = nil
             end
         end
     end,
 })
 
--- 🛑 Tombol: Stop Loop Teleport
 TeleTab:CreateButton({
-    Name = "Stop Loop Teleport",
+    Name = "🛑 Stop Loop Teleport",
     Callback = function()
-        if TeleportLoop then
-            task.cancel(TeleportLoop)
-            TeleportLoop = nil
+        if TeleportLoopTask then
+            task.cancel(TeleportLoopTask)
+            TeleportLoopTask = nil
             Rayfield:Notify({
                 Title = "Loop Teleport Dihentikan",
                 Content = "Teleport otomatis ke puncak telah dimatikan.",
@@ -75,6 +94,7 @@ TeleTab:CreateButton({
         end
     end,
 })
+
 -- ========================
 -- Tab Pengaturan
 -- ========================
@@ -104,6 +124,7 @@ SettingsTab:CreateSlider({
    end,
 })
 
+local InfJumpConnection
 SettingsTab:CreateToggle({
    Name = "Infinite Jump",
    CurrentValue = false,
@@ -112,7 +133,10 @@ SettingsTab:CreateToggle({
        local UserInputService = game:GetService("UserInputService")
        if Value then
            InfJumpConnection = UserInputService.JumpRequest:Connect(function()
-               game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+               local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+               if humanoid then
+                   humanoid:ChangeState("Jumping")
+               end
            end)
        else
            if InfJumpConnection then
@@ -124,25 +148,21 @@ SettingsTab:CreateToggle({
 })
 
 -- ========================
--- Tambahan: Deteksi Admin dan Summit > 100
+-- Deteksi Admin dan Summit
 -- ========================
 local Players = game:GetService("Players")
 
--- Fungsi deteksi admin dari BillboardGui
 local function DetectAdmins()
     local adminCount = 0
     for _, player in ipairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local head = character:FindFirstChild("Head")
-            if head then
-                for _, gui in ipairs(head:GetChildren()) do
-                    if gui:IsA("BillboardGui") then
-                        for _, label in ipairs(gui:GetChildren()) do
-                            if label:IsA("TextLabel") and string.find(string.upper(label.Text), "ADMIN") then
-                                adminCount += 1
-                                break
-                            end
+        local head = player.Character and player.Character:FindFirstChild("Head")
+        if head then
+            for _, gui in ipairs(head:GetChildren()) do
+                if gui:IsA("BillboardGui") then
+                    for _, label in ipairs(gui:GetChildren()) do
+                        if label:IsA("TextLabel") and string.find(string.upper(label.Text), "ADMIN") then
+                            adminCount += 1
+                            break
                         end
                     end
                 end
@@ -152,21 +172,17 @@ local function DetectAdmins()
     return adminCount
 end
 
--- Fungsi deteksi Summit > 100
 local function DetectSummitAbove100()
     for _, player in ipairs(Players:GetPlayers()) do
-        local character = player.Character
-        if character then
-            local head = character:FindFirstChild("Head")
-            if head then
-                for _, gui in ipairs(head:GetChildren()) do
-                    if gui:IsA("BillboardGui") then
-                        for _, label in ipairs(gui:GetChildren()) do
-                            if label:IsA("TextLabel") then
-                                local summitText = string.match(label.Text, "Summit:%s*(%d+)")
-                                if summitText and tonumber(summitText) > 100 then
-                                    return true, player.Name, tonumber(summitText)
-                                end
+        local head = player.Character and player.Character:FindFirstChild("Head")
+        if head then
+            for _, gui in ipairs(head:GetChildren()) do
+                if gui:IsA("BillboardGui") then
+                    for _, label in ipairs(gui:GetChildren()) do
+                        if label:IsA("TextLabel") then
+                            local summitText = string.match(label.Text, "Summit:%s*(%d+)")
+                            if summitText and tonumber(summitText) > 100 then
+                                return true, player.Name, tonumber(summitText)
                             end
                         end
                     end
@@ -177,7 +193,7 @@ local function DetectSummitAbove100()
     return false
 end
 
--- Toggle: Check Admin
+-- Loop Notifikasi Admin
 local CheckAdminLoop
 SettingsTab:CreateToggle({
     Name = "Check Admin (Notif Loop)",
@@ -207,7 +223,7 @@ SettingsTab:CreateToggle({
     end,
 })
 
--- Toggle: Check Summit > 100
+-- Loop Notifikasi Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
     Name = "Check Summit > 100 (Notif Loop)",
