@@ -8,7 +8,7 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 6034509994)
-TeleTab:CreateSection("Informasi")
+InfoTab:CreateSection("Informasi")
 InfoTab:CreateParagraph({
     Title = "Jammoko Baca",
     Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
