@@ -7,7 +7,7 @@ local Window = Rayfield:CreateWindow({
 })
 -- Tab Informasi
 -- ========================
-local InfoTab = Window:CreateTab("Informasi", 4483362458)
+local InfoTab = Window:CreateTab("Informasi", 6034509994)
 InfoTab:CreateParagraph({
     Title = "Tentang Script",
     Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
@@ -21,7 +21,7 @@ Rayfield:Notify({
 -- ========================
 -- Tab Teleport
 -- ========================
-local TeleTab = Window:CreateTab("Teleport", 4483362458)
+local TeleTab = Window:CreateTab("Teleport", 6026568198)
 
 local teleportPoints = {
     Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
@@ -209,7 +209,7 @@ TeleTab:CreateButton({
 -- ========================
 -- Tab Pengaturan
 -- ========================
-local SettingsTab = Window:CreateTab("Pengaturan", 4483362458)
+local SettingsTab = Window:CreateTab("Pengaturan", 6034509993)
 
 SettingsTab:CreateSlider({
    Name = "WalkSpeed",
