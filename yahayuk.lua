@@ -33,8 +33,7 @@ local teleportPoints = {
     Puncak = CFrame.new(-587, 906, -511),
 }
 TeleTab:CreateParagraph({
-    Title = "Teleport Manual",
-      Content = "",
+    TeleTab:CreateLabel("Teleport Manual")
 })
 -- Tombol manual teleport tetap ada 
 TeleTab:CreateButton({ Name = "🚩 Spawn", Callback = function()
@@ -114,6 +113,8 @@ local function isAtSpawn(pos, threshold)
 end
 
 TeleTab:CreateButton({
+  TeleTab:CreateLabel("Teleport Otomatis") 
+      
     Name = "🏁 Start Auto Teleport",
     Callback = function()
         if isAutoTeleporting then
