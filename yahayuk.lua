@@ -109,6 +109,11 @@ local function isAtSpawn(pos, threshold)
     local spawnPos = teleportPoints.Spawn.Position
     return (pos - spawnPos).Magnitude <= threshold
 end
+InfoTab:CreateParagraph({
+    Title = "",
+    Content = "",
+})
+TeleTab:CreateSection("Teleport Otomatis")
 
 TeleTab:CreateButton({
     Name = "🏁 Start Auto Teleport",
