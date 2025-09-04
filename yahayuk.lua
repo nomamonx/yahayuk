@@ -32,7 +32,7 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-    TeleTab:CreateLabel("Teleport Manual")
+
 })
 -- Tombol manual teleport tetap ada 
 TeleTab:CreateButton({ Name = "🚩 Spawn", Callback = function()
