@@ -8,7 +8,10 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 4483362458)
-
+InfoTab:CreateParagraph({
+    Title = "Tentang Script",
+    Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
+})
 Rayfield:Notify({
    Title = "Script Dimuat",
    Content = "TELASO berhasil muncul!!!",
