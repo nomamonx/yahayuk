@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: MT Yahayyuk",
+   Name = "Vip Script: Andika Princes",
    LoadingTitle = "Teleport System",
    LoadingSubtitle = "By ACONG",
 })
@@ -109,7 +109,7 @@ local function isAtSpawn(pos, threshold)
     local spawnPos = teleportPoints.Spawn.Position
     return (pos - spawnPos).Magnitude <= threshold
 end
-InfoTab:CreateParagraph({
+TeleTab:CreateParagraph({
     Title = "",
     Content = "",
 })
