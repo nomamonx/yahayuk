@@ -29,51 +29,51 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-
+TeleTab:CreateLabel("Teleport Manual")
 -- Tombol manual teleport tetap ada (Spawn sampai Puncak)
-TeleTab:CreateButton({ Name = "Teleport Spawn", Callback = function()
+TeleTab:CreateButton({ Name = "🚩 Teleport Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.Spawn
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport CP 1", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport CP 1", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.CP1
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport CP 2", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport CP 2", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.CP2
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport CP 3", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport CP 3", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.CP3
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport CP 4", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport CP 4", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.CP4
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport CP 5", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport CP 5", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.CP5
     end
 end })
 
-TeleTab:CreateButton({ Name = "Teleport Puncak", Callback = function()
+TeleTab:CreateButton({ Name = "📍 Teleport Puncak", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.Puncak
@@ -108,7 +108,7 @@ local function isAtSpawn(pos, threshold)
 end
 
 TeleTab:CreateButton({
-    Name = "Start Auto Teleport",
+    Name = "🏁 Start Auto Teleport",
     Callback = function()
         if isAutoTeleporting then
             Rayfield:Notify({
@@ -173,7 +173,7 @@ TeleTab:CreateButton({
 })
 
 TeleTab:CreateButton({
-    Name = "Stop Auto Teleport ",
+    Name = "🛑 Stop Auto Teleport ",
     Callback = function()
         if isAutoTeleporting then
             isAutoTeleporting = false
