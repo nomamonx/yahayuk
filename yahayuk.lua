@@ -21,7 +21,7 @@ Rayfield:Notify({
 -- ========================
 -- Tab Teleport
 -- ========================
-local TeleTab = Window:CreateTab("Teleport", 6026568198)
+local TeleTab = Window:CreateTab("Teleport", 6034509993)
 
 local teleportPoints = {
     Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
@@ -109,10 +109,8 @@ local function isAtSpawn(pos, threshold)
     local spawnPos = teleportPoints.Spawn.Position
     return (pos - spawnPos).Magnitude <= threshold
 end
-TeleTab:CreateParagraph({
-    Title = "",
-    Content = "",
 })
+TeleTab:CreateSection("")
 TeleTab:CreateSection("Teleport Otomatis")
 
 TeleTab:CreateButton({
