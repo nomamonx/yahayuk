@@ -1,27 +1,24 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: Andika Princes",
+   Name = "Vip Script: MT Yahayyuk",
    LoadingTitle = "Teleport System",
    LoadingSubtitle = "By ACONG",
 })
 -- Tab Informasi
 -- ========================
-local InfoTab = Window:CreateTab("Informasi", 6034509994)
-InfoTab:CreateParagraph({
-    Title = "Tentang Script",
-    Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
-})
+local InfoTab = Window:CreateTab("Informasi", 4483362458)
+
 Rayfield:Notify({
    Title = "Script Dimuat",
-   Content = "TELASO berhasil muncul!!!",
+   Content = "TELASO berhasil!!!",
    Duration = 6.5,
    Image = 4483362458,
 })
 -- ========================
 -- Tab Teleport
 -- ========================
-local TeleTab = Window:CreateTab("Teleport", 6034509993)
+local TeleTab = Window:CreateTab("Teleport", 4483362458)
 
 local teleportPoints = {
     Spawn = CFrame.new(-932, 170, 881),     -- Sesuaikan koordinat spawn di game kamu
@@ -32,9 +29,9 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-TeleTab:CreateSection("Teleport Manual")
--- Tombol manual teleport tetap ada (Spawn sampai Puncak)
-TeleTab:CreateButton({ Name = "🚩 Teleport Spawn", Callback = function()
+
+-- Tombol manual teleport tetap ada 
+TeleTab:CreateButton({ Name = "🚩 Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         char.HumanoidRootPart.CFrame = teleportPoints.Spawn
@@ -109,10 +106,9 @@ local function isAtSpawn(pos, threshold)
     local spawnPos = teleportPoints.Spawn.Position
     return (pos - spawnPos).Magnitude <= threshold
 end
-})
+
 TeleTab:CreateSection("")
 TeleTab:CreateSection("Teleport Otomatis")
-
 TeleTab:CreateButton({
     Name = "🏁 Start Auto Teleport",
     Callback = function()
@@ -207,7 +203,7 @@ TeleTab:CreateButton({
 -- ========================
 -- Tab Pengaturan
 -- ========================
-local SettingsTab = Window:CreateTab("Pengaturan", 6034509993)
+local SettingsTab = Window:CreateTab("Pengaturan", 4483362458)
 
 SettingsTab:CreateSlider({
    Name = "WalkSpeed",
@@ -309,7 +305,7 @@ end
 -- Toggle: Check Admin
 local CheckAdminLoop
 SettingsTab:CreateToggle({
-    Name = "Check Admin (Beta)",
+    Name = "Check Admin (Notif Loop)",
     CurrentValue = false,
     Flag = "CheckAdminToggle",
     Callback = function(Value)
@@ -340,7 +336,7 @@ SettingsTab:CreateToggle({
 -- Toggle: Check Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
-    Name = "Check Pro",
+    Name = "Check Summit > 100 (Notif Loop)",
     CurrentValue = false,
     Flag = "CheckSummitToggle",
     Callback = function(Value)
