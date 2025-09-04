@@ -8,7 +8,7 @@ local Window = Rayfield:CreateWindow({
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 6034509994)
-InfoTab:CreateSection("Informasi Tambahan")
+
 
 InfoTab:CreateParagraph({
     Title = "Jammoko Baca",
