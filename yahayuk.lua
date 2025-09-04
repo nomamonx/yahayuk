@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Script Private: MT Yahayyuk",
+   Name = "Vip Script: MT Yahayyuk",
    LoadingTitle = "Teleport System",
    LoadingSubtitle = "By ACONG",
 })
@@ -11,7 +11,7 @@ local InfoTab = Window:CreateTab("Informasi", 6034509994)
 
 Rayfield:Notify({
    Title = "Script Dimuat",
-   Content = "TELASO berhasil !!!",
+   Content = "TELASO berhasil!!!",
    Duration = 6.5,
    Image = 4483362458,
 })
@@ -306,7 +306,7 @@ end
 -- Toggle: Check Admin
 local CheckAdminLoop
 SettingsTab:CreateToggle({
-    Name = "Check Admin (Notif Loop)",
+    Name = "Check Admin (Beta)",
     CurrentValue = false,
     Flag = "CheckAdminToggle",
     Callback = function(Value)
@@ -337,7 +337,7 @@ SettingsTab:CreateToggle({
 -- Toggle: Check Summit > 100
 local CheckSummitLoop
 SettingsTab:CreateToggle({
-    Name = "Check Summit > 100 (Notif Loop)",
+    Name = "Check Summit Pro",
     CurrentValue = false,
     Flag = "CheckSummitToggle",
     Callback = function(Value)
