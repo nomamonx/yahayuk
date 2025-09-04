@@ -1,17 +1,17 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: MT Yahayyuk",
+   Name = "Script Private: MT Yahayyuk",
    LoadingTitle = "Teleport System",
    LoadingSubtitle = "By ACONG",
 })
 -- Tab Informasi
 -- ========================
-local InfoTab = Window:CreateTab("Informasi", 4483362458)
+local InfoTab = Window:CreateTab("Informasi", 6034509994)
 
 Rayfield:Notify({
    Title = "Script Dimuat",
-   Content = "TELASO berhasil!!!",
+   Content = "TELASO berhasil !!!",
    Duration = 6.5,
    Image = 4483362458,
 })
@@ -31,6 +31,7 @@ local teleportPoints = {
 }
 
 -- Tombol manual teleport tetap ada 
+TeleTab:CreateSection("Teleport Manual")
 TeleTab:CreateButton({ Name = "🚩 Spawn", Callback = function()
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
@@ -107,7 +108,7 @@ local function isAtSpawn(pos, threshold)
     return (pos - spawnPos).Magnitude <= threshold
 end
 
-TeleTab:CreateSection("")
+
 TeleTab:CreateSection("Teleport Otomatis")
 TeleTab:CreateButton({
     Name = "🏁 Start Auto Teleport",
@@ -203,7 +204,7 @@ TeleTab:CreateButton({
 -- ========================
 -- Tab Pengaturan
 -- ========================
-local SettingsTab = Window:CreateTab("Pengaturan", 4483362458)
+local SettingsTab = Window:CreateTab("Pengaturan", 6034509993)
 
 SettingsTab:CreateSlider({
    Name = "WalkSpeed",
