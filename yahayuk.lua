@@ -32,7 +32,6 @@ local teleportPoints = {
     CP5 = CFrame.new(224, 315, -147),
     Puncak = CFrame.new(-587, 906, -511),
 }
-TeleTab:CreateParagraph({
     TeleTab:CreateLabel("Teleport Manual")
 })
 -- Tombol manual teleport tetap ada 
@@ -111,8 +110,6 @@ local function isAtSpawn(pos, threshold)
     local spawnPos = teleportPoints.Spawn.Position
     return (pos - spawnPos).Magnitude <= threshold
 end
-
-TeleTab:CreateLabel("Teleport Otomatis") 
 
 TeleTab:CreateButton({  
     Name = "🏁 Start Auto Teleport",
