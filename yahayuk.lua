@@ -112,9 +112,9 @@ local function isAtSpawn(pos, threshold)
     return (pos - spawnPos).Magnitude <= threshold
 end
 
-TeleTab:CreateButton({
-  TeleTab:CreateLabel("Teleport Otomatis") 
-      
+TeleTab:CreateLabel("Teleport Otomatis") 
+
+TeleTab:CreateButton({  
     Name = "🏁 Start Auto Teleport",
     Callback = function()
         if isAutoTeleporting then
