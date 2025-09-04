@@ -1,14 +1,18 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Vip Script: MT Yahayyuk",
+   Name = "Private: MT Yahayyuk",
    LoadingTitle = "Teleport System",
    LoadingSubtitle = "By ACONG",
 })
 -- Tab Informasi
 -- ========================
 local InfoTab = Window:CreateTab("Informasi", 6034509994)
-
+TeleTab:CreateSection("Informasi")
+InfoTab:CreateParagraph({
+    Title = "Jammoko Baca",
+    Content = "Ini adalah script teleport Yang kubuat asal asal akwokaowk.",
+})
 Rayfield:Notify({
    Title = "Script Dimuat",
    Content = "TELASO berhasil!!!",
