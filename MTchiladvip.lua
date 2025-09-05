@@ -911,6 +911,61 @@ SettingsTab:CreateSlider({
     end,
 })
 
+-- Asumsikan kamu sudah punya: local Tab = Window:CreateTab("Pengaturan", iconID)
+-- Tinggal tambahkan toggle ini ke dalam tab tsb
+
+local Players = game:GetService("Players")
+local randomActive = false
+local randomNames = {
+    "OrangMisterius","HantuGunung","SiTembus","PlayerX","GakKetahuan",
+    "TargetRandom","NoobBergaya","KingOfBug","GhostMan","JatuhTerus"
+}
+
+local function getRandomName()
+    return randomNames[math.random(1, #randomNames)]
+end
+
+local function applyRandomNames()
+    for _,plr in pairs(Players:GetPlayers()) do
+        if plr ~= Players.LocalPlayer then
+            pcall(function()
+                plr.DisplayName = getRandomName()
+            end)
+        end
+    end
+end
+
+local function resetNames()
+    for _,plr in pairs(Players:GetPlayers()) do
+        if plr ~= Players.LocalPlayer then
+            pcall(function()
+                plr.DisplayName = plr.Name
+            end)
+        end
+    end
+end
+
+SettingsTab:CreateToggle({
+   Name = "Random Display Names",
+   CurrentValue = false,
+   Flag = "RandomNameToggle",
+   Callback = function(Value)
+        randomActive = Value
+        if randomActive then
+            applyRandomNames()
+            Players.PlayerAdded:Connect(function(plr)
+                task.wait(1)
+                if randomActive then
+                    pcall(function()
+                        plr.DisplayName = getRandomName()
+                    end)
+                end
+            end)
+        else
+            resetNames()
+        end
+   end,
+})
 
 -- ========================
 -- FunTab: Follow + Lengan Joget + Kepala Terbalik
