@@ -917,25 +917,30 @@ SettingsTab:CreateSlider({
 local Players = game:GetService("Players")
 local lp = Players.LocalPlayer
 local randomActive = false
-local randomNames = {
-    "OrangMisterius","HantuGunung","SiTembus","PlayerX","GakKetahuan",
-    "TargetRandom","NoobBergaya","KingOfBug","GhostMan","JatuhTerus"
+
+-- daftar nama palsu (boleh kamu edit sesuka hati)
+local fakeNames = {
+    "OrangMisterius","PlayerX","NoobBergaya","SiTembus","HantuGunung"
 }
 
 local function getRandomName()
-    return randomNames[math.random(1, #randomNames)]
+    return fakeNames[math.random(1, #fakeNames)]
 end
 
-local function setFakeBillboard(char, name)
+local function setFakeName(char)
     local head = char:FindFirstChild("Head")
-    if not head then return end
-    if head:FindFirstChild("FakeName") then head.FakeName:Destroy() end
+    local humanoid = char:FindFirstChild("Humanoid")
+    if not head or not humanoid then return end
 
-    -- sembunyikan nama asli bawaan Roblox
-    if char:FindFirstChild("Humanoid") then
-        char.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+    -- sembunyikan nama asli
+    humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+
+    -- hapus fake lama kalau ada
+    if head:FindFirstChild("FakeName") then
+        head.FakeName:Destroy()
     end
 
+    -- bikin Billboard GUI untuk fake name
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "FakeName"
     billboard.Adornee = head
@@ -951,34 +956,35 @@ local function setFakeBillboard(char, name)
     text.TextStrokeTransparency = 0
     text.Font = Enum.Font.SourceSansBold
     text.TextScaled = true
-    text.Text = name
+    text.Text = getRandomName()
     text.Parent = billboard
 end
 
 local function resetName(char)
     local head = char:FindFirstChild("Head")
+    local humanoid = char:FindFirstChild("Humanoid")
     if head and head:FindFirstChild("FakeName") then
         head.FakeName:Destroy()
     end
-    if char:FindFirstChild("Humanoid") then
-        char.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
+    if humanoid then
+        humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
     end
 end
 
 SettingsTab:CreateToggle({
-   Name = "Fake Name (Local)",
+   Name = "Sensor Nama Saya",
    CurrentValue = false,
-   Flag = "FakeNameToggle",
+   Flag = "MyFakeNameToggle",
    Callback = function(Value)
         randomActive = Value
         if randomActive then
             if lp.Character then
-                setFakeBillboard(lp.Character, getRandomName())
+                setFakeName(lp.Character)
             end
             lp.CharacterAdded:Connect(function(char)
                 task.wait(1)
                 if randomActive then
-                    setFakeBillboard(char, getRandomName())
+                    setFakeName(char)
                 end
             end)
         else
@@ -988,6 +994,7 @@ SettingsTab:CreateToggle({
         end
    end,
 })
+
 
 
 -- ========================
