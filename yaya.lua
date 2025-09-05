@@ -913,24 +913,33 @@ SettingsTab:CreateSlider({
 
 -- Asumsikan kamu sudah punya: local Tab = Window:CreateTab("Pengaturan", iconID)
 -- Tinggal tambahkan toggle ini ke dalam tab tsb
-
 local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
 local randomActive = false
-local randomNames = {
-    "OrangMisterius","HantuGunung","SiTembus","PlayerX","GakKetahuan",
-    "TargetRandom","NoobBergaya","KingOfBug","GhostMan","JatuhTerus"
+
+-- daftar nama palsu (boleh kamu edit sesuka hati)
+local fakeNames = {
+    "OrangMisterius","PlayerX","NoobBergaya","SiTembus","HantuGunung"
 }
 
 local function getRandomName()
-    return randomNames[math.random(1, #randomNames)]
+    return fakeNames[math.random(1, #fakeNames)]
 end
 
--- pasang billboard fake name di atas kepala
-local function setFakeBillboard(char, name)
+local function setFakeName(char)
     local head = char:FindFirstChild("Head")
-    if not head then return end
-    if head:FindFirstChild("FakeName") then head.FakeName:Destroy() end
+    local humanoid = char:FindFirstChild("Humanoid")
+    if not head or not humanoid then return end
 
+    -- sembunyikan nama asli
+    humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+
+    -- hapus fake lama kalau ada
+    if head:FindFirstChild("FakeName") then
+        head.FakeName:Destroy()
+    end
+
+    -- bikin Billboard GUI untuk fake name
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "FakeName"
     billboard.Adornee = head
@@ -946,56 +955,41 @@ local function setFakeBillboard(char, name)
     text.TextStrokeTransparency = 0
     text.Font = Enum.Font.SourceSansBold
     text.TextScaled = true
-    text.Text = name
+    text.Text = getRandomName()
     text.Parent = billboard
 end
 
-local function applyRandomNames()
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr.Character and plr.Character:FindFirstChild("Head") then
-            setFakeBillboard(plr.Character, getRandomName())
-        end
+local function resetName(char)
+    local head = char:FindFirstChild("Head")
+    local humanoid = char:FindFirstChild("Humanoid")
+    if head and head:FindFirstChild("FakeName") then
+        head.FakeName:Destroy()
     end
-end
-
-local function resetNames()
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr.Character and plr.Character:FindFirstChild("Head") then
-            if plr.Character.Head:FindFirstChild("FakeName") then
-                plr.Character.Head.FakeName:Destroy()
-            end
-        end
+    if humanoid then
+        humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
     end
 end
 
 SettingsTab:CreateToggle({
-   Name = "Random Display Names",
+   Name = "Sensor Nama Saya",
    CurrentValue = false,
-   Flag = "RandomNameToggle",
+   Flag = "MyFakeNameToggle",
    Callback = function(Value)
         randomActive = Value
         if randomActive then
-            applyRandomNames()
-
-            -- kalau ada player baru join
-            Players.PlayerAdded:Connect(function(plr)
-                plr.CharacterAdded:Connect(function(char)
-                    if randomActive then
-                        task.wait(1)
-                        setFakeBillboard(char, getRandomName())
-                    end
-                end)
-            end)
-
-            -- kalau kamu respawn
-            Players.LocalPlayer.CharacterAdded:Connect(function(char)
+            if lp.Character then
+                setFakeName(lp.Character)
+            end
+            lp.CharacterAdded:Connect(function(char)
+                task.wait(1)
                 if randomActive then
-                    task.wait(1)
-                    setFakeBillboard(char, getRandomName())
+                    setFakeName(char)
                 end
             end)
         else
-            resetNames()
+            if lp.Character then
+                resetName(lp.Character)
+            end
         end
    end,
 })
