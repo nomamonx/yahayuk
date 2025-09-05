@@ -925,22 +925,45 @@ local function getRandomName()
     return randomNames[math.random(1, #randomNames)]
 end
 
+-- pasang billboard fake name di atas kepala
+local function setFakeBillboard(char, name)
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+    if head:FindFirstChild("FakeName") then head.FakeName:Destroy() end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "FakeName"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 2, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = head
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.TextColor3 = Color3.new(1,1,1)
+    text.TextStrokeTransparency = 0
+    text.Font = Enum.Font.SourceSansBold
+    text.TextScaled = true
+    text.Text = name
+    text.Parent = billboard
+end
+
 local function applyRandomNames()
     for _,plr in pairs(Players:GetPlayers()) do
-        if plr ~= Players.LocalPlayer then
-            pcall(function()
-                plr.DisplayName = getRandomName()
-            end)
+        if plr.Character and plr.Character:FindFirstChild("Head") then
+            setFakeBillboard(plr.Character, getRandomName())
         end
     end
 end
 
 local function resetNames()
     for _,plr in pairs(Players:GetPlayers()) do
-        if plr ~= Players.LocalPlayer then
-            pcall(function()
-                plr.DisplayName = plr.Name
-            end)
+        if plr.Character and plr.Character:FindFirstChild("Head") then
+            if plr.Character.Head:FindFirstChild("FakeName") then
+                plr.Character.Head.FakeName:Destroy()
+            end
         end
     end
 end
@@ -953,12 +976,22 @@ SettingsTab:CreateToggle({
         randomActive = Value
         if randomActive then
             applyRandomNames()
+
+            -- kalau ada player baru join
             Players.PlayerAdded:Connect(function(plr)
-                task.wait(1)
+                plr.CharacterAdded:Connect(function(char)
+                    if randomActive then
+                        task.wait(1)
+                        setFakeBillboard(char, getRandomName())
+                    end
+                end)
+            end)
+
+            -- kalau kamu respawn
+            Players.LocalPlayer.CharacterAdded:Connect(function(char)
                 if randomActive then
-                    pcall(function()
-                        plr.DisplayName = getRandomName()
-                    end)
+                    task.wait(1)
+                    setFakeBillboard(char, getRandomName())
                 end
             end)
         else
@@ -966,6 +999,7 @@ SettingsTab:CreateToggle({
         end
    end,
 })
+
 
 -- ========================
 -- FunTab: Follow + Lengan Joget + Kepala Terbalik
