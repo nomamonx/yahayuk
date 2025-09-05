@@ -914,91 +914,6 @@ SettingsTab:CreateSlider({
 -- Asumsikan kamu sudah punya: local Tab = Window:CreateTab("Pengaturan", iconID)
 -- Tinggal tambahkan toggle ini ke dalam tab tsb
 
-local Players = game:GetService("Players")
-local randomActive = false
-local randomNames = {
-    "OrangMisterius","HantuGunung","SiTembus","PlayerX","GakKetahuan",
-    "TargetRandom","NoobBergaya","KingOfBug","GhostMan","JatuhTerus"
-}
-
-local function getRandomName()
-    return randomNames[math.random(1, #randomNames)]
-end
-
--- pasang billboard fake name di atas kepala
-local function setFakeBillboard(char, name)
-    local head = char:FindFirstChild("Head")
-    if not head then return end
-    if head:FindFirstChild("FakeName") then head.FakeName:Destroy() end
-
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "FakeName"
-    billboard.Adornee = head
-    billboard.Size = UDim2.new(0, 200, 0, 50)
-    billboard.StudsOffset = Vector3.new(0, 2, 0)
-    billboard.AlwaysOnTop = true
-    billboard.Parent = head
-
-    local text = Instance.new("TextLabel")
-    text.Size = UDim2.new(1, 0, 1, 0)
-    text.BackgroundTransparency = 1
-    text.TextColor3 = Color3.new(1,1,1)
-    text.TextStrokeTransparency = 0
-    text.Font = Enum.Font.SourceSansBold
-    text.TextScaled = true
-    text.Text = name
-    text.Parent = billboard
-end
-
-local function applyRandomNames()
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr.Character and plr.Character:FindFirstChild("Head") then
-            setFakeBillboard(plr.Character, getRandomName())
-        end
-    end
-end
-
-local function resetNames()
-    for _,plr in pairs(Players:GetPlayers()) do
-        if plr.Character and plr.Character:FindFirstChild("Head") then
-            if plr.Character.Head:FindFirstChild("FakeName") then
-                plr.Character.Head.FakeName:Destroy()
-            end
-        end
-    end
-end
-
-SettingsTab:CreateToggle({
-   Name = "Random Display Names",
-   CurrentValue = false,
-   Flag = "RandomNameToggle",
-   Callback = function(Value)
-        randomActive = Value
-        if randomActive then
-            applyRandomNames()
-
-            -- kalau ada player baru join
-            Players.PlayerAdded:Connect(function(plr)
-                plr.CharacterAdded:Connect(function(char)
-                    if randomActive then
-                        task.wait(1)
-                        setFakeBillboard(char, getRandomName())
-                    end
-                end)
-            end)
-
-            -- kalau kamu respawn
-            Players.LocalPlayer.CharacterAdded:Connect(function(char)
-                if randomActive then
-                    task.wait(1)
-                    setFakeBillboard(char, getRandomName())
-                end
-            end)
-        else
-            resetNames()
-        end
-   end,
-})
 
 
 -- ========================
@@ -1017,7 +932,87 @@ local JogetConnection
 local JogetAmplitude = 30 -- derajat
 local JogetSpeed = 5 -- kecepatan
 
--- Dropdown pilih player
+-- Dropdown plocal Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local randomActive = false
+
+-- daftar nama palsu (boleh kamu edit sesuka hati)
+local fakeNames = {
+    "OrangMisterius","PlayerX","NoobBergaya","SiTembus","HantuGunung"
+}
+
+local function getRandomName()
+    return fakeNames[math.random(1, #fakeNames)]
+end
+
+local function setFakeName(char)
+    local head = char:FindFirstChild("Head")
+    local humanoid = char:FindFirstChild("Humanoid")
+    if not head or not humanoid then return end
+
+    -- sembunyikan nama asli
+    humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+
+    -- hapus fake lama kalau ada
+    if head:FindFirstChild("FakeName") then
+        head.FakeName:Destroy()
+    end
+
+    -- bikin Billboard GUI untuk fake name
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "FakeName"
+    billboard.Adornee = head
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 2, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = head
+
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.TextColor3 = Color3.new(1,1,1)
+    text.TextStrokeTransparency = 0
+    text.Font = Enum.Font.SourceSansBold
+    text.TextScaled = true
+    text.Text = getRandomName()
+    text.Parent = billboard
+end
+
+local function resetName(char)
+    local head = char:FindFirstChild("Head")
+    local humanoid = char:FindFirstChild("Humanoid")
+    if head and head:FindFirstChild("FakeName") then
+        head.FakeName:Destroy()
+    end
+    if humanoid then
+        humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
+    end
+end
+
+SettingsTab:CreateToggle({
+   Name = "Sensor Nama Saya",
+   CurrentValue = false,
+   Flag = "MyFakeNameToggle",
+   Callback = function(Value)
+        randomActive = Value
+        if randomActive then
+            if lp.Character then
+                setFakeName(lp.Character)
+            end
+            lp.CharacterAdded:Connect(function(char)
+                task.wait(1)
+                if randomActive then
+                    setFakeName(char)
+                end
+            end)
+        else
+            if lp.Character then
+                resetName(lp.Character)
+            end
+        end
+   end,
+})
+ilih player
 local function RefreshPlayerList()
     local names = {}
     for _, plr in ipairs(Players:GetPlayers()) do
