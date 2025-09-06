@@ -1,0 +1,4 @@
+return {
+    ["HWID_KAMU"] = true,
+    ["HWID_TEMEN"] = true,
+}
