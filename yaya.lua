@@ -23,13 +23,6 @@ end
 -- // Cek apakah HWID terdaftar
 local isVIP = AllowedHWIDs[hwid] == true
 
--- // GUI dengan Rayfield
-local Window = Rayfield:CreateWindow({
-   Name = "VIP Script",
-   LoadingTitle = "HWID Check",
-   LoadingSubtitle = "By Kamu"
-})
-
 if isVIP then
     -- Semua Tab tersedia kalau VIP
  
